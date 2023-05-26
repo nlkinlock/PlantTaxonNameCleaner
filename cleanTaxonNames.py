@@ -1533,4 +1533,4 @@ taxa_final = taxa_final[cols_save]
 fileoutput = [filename, "_TextCleaned_", datetime.now().strftime("%Y%m%d"), ".csv"]
 fileoutput = "".join(fileoutput)
 print("\nsaving final cleaned file to\t", fileoutput)
-taxa_final.to_csv(fileoutput, line_terminator = '\n', index = False, quoting = csv.QUOTE_NONNUMERIC)
+taxa_final.to_csv(fileoutput, lineterminator = '\n', index = False, quoting = csv.QUOTE_NONNUMERIC)
