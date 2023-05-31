@@ -660,7 +660,7 @@ else:
     check_infra = return_matches(arr = taxa['SpecificEpithet'], regexp = infra_regexp)
     if len(check_infra) > 0:
         # if so, place infraspecific name and rank in own columns and remove from specific epithet
-        infra_samp = set(check_infra)
+        infra_samp = list(set(check_infra))
         if len(infra_samp) > subset_len:
             infra_samp = random.sample(infra_samp, subset_len)
         print("\ninfraspecific ranks/names are present in specific epithet column\t...moving to own column (", len(check_infra), " matches)\n\t\t", ', '.join(infra_samp), sep = '')
@@ -695,7 +695,7 @@ else:
         cv_init = [re.sub("(\w)'(\w)", r'\1\2', v) for v in cv_init]
         check_cv = return_matches(arr = cv_init, regexp = cv_regexp)   
         if (len(check_cv) > 0):
-            cv_samp = set(check_cv)
+            cv_samp = list(set(check_cv))
             if len(cv_samp) > subset_len:
                 cv_samp = random.sample(cv_samp, subset_len)
             print("\tcultivars identified, moving to cultivar column (", len(cv_samp), " matches)\n\t\t", ', '.join(cv_samp), sep = '')
@@ -876,7 +876,7 @@ for x in range(len(col_names)):
         if col_names[x] in ['Genus', 'SpecificEpithet', 'Authority', 'InfraspecificAuthority']:
             print(col_names[x], "\n", check_num)
             sys.exit("ERROR: numbers identified in Genus, SpecificEpithet, Authority, or InfraspecificAuthority columns")
-        num_samp = set(check_num)
+        num_samp = list(set(check_num))
         if len(num_samp) > subset_len:
             num_samp = random.sample(num_samp, subset_len)
         print(col_names[x], "\tNOTE: numbers identified, check manually! (", len(check_num)," matches) \n\t\t", ', '.join(num_samp), sep ='')
@@ -899,7 +899,7 @@ print("\nchecking for extra spaces")
 for x in range(len(col_names)):
     check_multispace = return_matches(arr = taxa[col_names[x]], regexp = ' {2,}')
     if len(check_multispace) > 0:
-        multispace_samp = set(check_multispace)
+        multispace_samp = list(set(check_multispace))
         if len(multispace_samp) > subset_len:
             multispace_samp = random.sample(multispace_samp, subset_len)
         print(col_names[x], "\textra spaces identified\t...standardizing (", len(check_multispace), " matches)\n\t\t", ', '.join(multispace_samp), sep = '')
@@ -907,7 +907,7 @@ for x in range(len(col_names)):
 for x in range(len(col_names)):
     check_space = return_matches(arr = taxa[col_names[x]], regexp = '^ | $')
     if len(check_space) > 0:
-        space_samp = set(check_space)
+        space_samp = list(set(check_space))
         if len(space_samp) > subset_len:
             space_samp = random.sample(space_samp, subset_len)
         print(col_names[x], "\tbeginning/ending spaces identified\t...removing (", len(check_space), " matches)\n\t\t", ', '.join(space_samp), sep = '')
@@ -921,7 +921,7 @@ for col in cols:
     print("\tchecking column:", col)
     check_unacc = return_matches(arr = taxa[col], regexp = '[^A-Za-z- \u00d7.]')
     if len(check_unacc) > 0:
-        unacc_samp = set(check_unacc)
+        unacc_samp = list(set(check_unacc))
         if len(unacc_samp) > subset_len:
             unacc_samp = random.sample(unacc_samp, subset_len)
         print(col, "\tNOTE: nonstandard characters identified\t...check manually! (", len(check_unacc)," matches) \n\t\t", ', '.join(unacc_samp), sep = '')
@@ -932,28 +932,28 @@ print("\nchecking for parentheses spacing errors and synonyms in name")
 for x in range(len(col_names)):
     check_parens1 = return_matches(arr = taxa[col_names[x]], regexp = '([a-zA-Z.]+)\(')
     if len(check_parens1) > 0:
-        parens1_samp = set(check_parens1)
+        parens1_samp = list(set(check_parens1))
         if len(parens1_samp) > subset_len:
             parens1_samp = random.sample(parens1_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens1), " matches)\n\t\t", ', '.join(parens1_samp), sep = '')
         taxa[col_names[x]] = [re.sub('([a-zA-Z.]+)\(', r'\1 (', v) for v in taxa[col_names[x]]]
     check_parens2 = return_matches(arr = taxa[col_names[x]], regexp = '\)([a-zA-Z.]+)')
     if len(check_parens2) > 0:
-        parens2_samp = set(check_parens2)
+        parens2_samp = list(set(check_parens2))
         if len(parens2_samp) > subset_len:
             parens2_samp = random.sample(parens2_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens2), " matches)\n\t\t", ', '.join(parens2_samp), sep = '')
         taxa[col_names[x]] = [re.sub('\)([a-zA-Z.]+)', r') \1', v) for v in taxa[col_names[x]]]
     check_parens3 = return_matches(arr = taxa[col_names[x]], regexp = ' \)')
     if len(check_parens3) > 0:
-        parens3_samp = set(check_parens3)
+        parens3_samp = list(set(check_parens3))
         if len(parens3_samp) > subset_len:
             parens3_samp = random.sample(parens3_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens3), " matches)\n\t\t", ', '.join(parens3_samp), sep = '')
         taxa[col_names[x]] = [re.sub(' \)', r')', v) for v in taxa[col_names[x]]]
     check_syn = return_matches(arr = taxa[col_names[x]], regexp = '([A-Z][^A-Z\(]+)(.*) \(=.*\)')
     if len(check_syn) > 0:
-        syn_samp = set(check_syn)
+        syn_samp = list(set(check_syn))
         if len(syn_samp) > subset_len:
             syn_samp = random.sample(syn_samp, subset_len)
         print(col_names[x], "\tsynonym in name identified, i.e., (= )\t...removing all content in parens (",len(check_syn), " matches)\n\t\t", ', '.join(syn_samp), sep = '')
@@ -961,14 +961,14 @@ for x in range(len(col_names)):
     if cv_bool | (col_names[x] != "Cultivar"):   
         check_eq = return_matches(arr = taxa[col_names[x]], regexp = ' ?= ?')
         if len(check_eq) > 0:
-            eq_samp = set(check_eq)
+            eq_samp = list(set(check_eq))
             if len(eq_samp) > subset_len:
                 eq_samp = random.sample(eq_samp, subset_len)
             print(col_names[x], "\tequals sign in name identified\t...removing (", len(check_eq), " matches)\n\t\t", ', '.join(eq_samp), sep = '')
             taxa[col_names[x]] = [re.sub(' ?= ?', '', v) for v in taxa[col_names[x]]]
     check_hybrid = return_matches(arr = taxa[col_names[x]], regexp = '(?: |^)[xX] ')
     if len(check_hybrid) > 0:
-        hybrid_samp = set(check_hybrid)
+        hybrid_samp = list(set(check_hybrid))
         if len(hybrid_samp) > subset_len:
             hybrid_samp = random.sample(hybrid_samp, subset_len)
         print(col_names[x], "\talternative hybrid symbol identified\t...replacing with \u00D7 (", len(check_hybrid), " matches)\n\t\t", ', '.join(hybrid_samp), sep = '')
@@ -976,7 +976,7 @@ for x in range(len(col_names)):
         taxa[col_names[x]] = [re.sub(' [xX] ', ' \u00D7 ', v) for v in taxa[col_names[x]]]
     check_hyb_spacing = return_matches(arr = taxa[col_names[x]], regexp = '(?: |^)[\u00D7+][A-Za-z]')
     if len(check_hyb_spacing) > 0:
-        hyb_spacing_samp = set(check_hyb_spacing)
+        hyb_spacing_samp = list(set(check_hyb_spacing))
         if len(hyb_spacing_samp) > subset_len:
             hyb_spacing_samp = random.sample(hyb_spacing_samp, subset_len)
         print(col_names[x], "\talternative hybrid spacing identified\t...standardizing (", len(check_hyb_spacing), " matches)\n\t\t", ', '.join(hyb_spacing_samp), sep = '')
@@ -1038,7 +1038,7 @@ if ('Authority' in col_names):
     # author initials should not include spaces
     check_author_inits = return_matches(arr = taxa['Authority'], regexp = r'(?:[A-Z]\. )*[A-Z]\. [A-Z]')
     if len(check_author_inits) > 0:
-        author_init_samp = set(check_author_inits)
+        author_init_samp = list(set(check_author_inits))
         if len(author_init_samp) > subset_len:
             author_init_samp = random.sample(author_init_samp, subset_len)
         print("\tnonstandard spacing of author initials\t...standardizing (", len(check_author_inits), " matches)\n\t\t", ', '.join(author_init_samp), sep = '')
@@ -1046,7 +1046,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_author_inits = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'(?:[A-Z]\. )*[A-Z]\. [A-Z]')
         if len(check_author_inits) > 0:
-            author_init_samp = set(check_author_inits)
+            author_init_samp = list(set(check_author_inits))
             if len(author_init_samp) > subset_len:
                 author_init_samp = random.sample(author_init_samp, subset_len)
             print("\tnonstandard spacing of infraspecific author initials\t...standardizing (", len(check_author_inits), " matches)\n\t\t", ', '.join(author_init_samp), sep = '')
@@ -1054,7 +1054,7 @@ if ('Authority' in col_names):
     # and to ampersand
     check_author_amp = return_matches(arr = taxa['Authority'], regexp = r' and ')
     if len(check_author_amp) > 0:
-        author_amp_samp = set(check_author_amp)
+        author_amp_samp = list(set(check_author_amp))
         if len(author_amp_samp) > subset_len:
             author_amp_samp = random.sample(author_amp_samp, subset_len)
         print("\t'and' instead of ampersand in author\t...standardizing (", len(check_author_amp), " matches)\n\t\t", ', '.join(author_amp_samp), sep = '')
@@ -1062,7 +1062,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_author_amp = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r' and ')
         if len(check_author_amp) > 0:
-            author_amp_samp = set(check_author_amp)
+            author_amp_samp = list(set(check_author_amp))
             if len(author_amp_samp) > subset_len:
                 author_amp_samp = random.sample(author_amp_samp, subset_len)
             print("\t'and' instead of ampersand in infraspecific author\t...standardizing (", len(check_author_amp), " matches)\n\t\t", ', '.join(author_amp_samp), sep = '')
@@ -1070,7 +1070,7 @@ if ('Authority' in col_names):
     # no period after ex, spaces around ex, lowercase
     check_ex = return_matches(arr = taxa['Authority'], regexp = r'(\.)?(?(1)| )[Ee]x\.? ')
     if len(check_ex) > 0:
-        ex_samp = set(check_ex)
+        ex_samp = list(set(check_ex))
         if len(ex_samp) > subset_len:
             ex_samp = random.sample(ex_samp, subset_len)
         print("\t'ex' in author citation\t...standardizing (", len(check_ex), " matches)\n\t\t", ', '.join(ex_samp), sep = '')
@@ -1078,7 +1078,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_ex = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'(\.)?(?(1)| )[Ee]x\.? ')
         if len(check_ex) > 0:
-            ex_samp = set(check_ex)
+            ex_samp = list(set(check_ex))
             if len(ex_samp) > subset_len:
                 ex_samp = random.sample(ex_samp, subset_len)
             print("\t'ex' in infraspecific author citation\t...standardizing (", len(check_ex), " matches)\n\t\t", ', '.join(ex_samp), sep = '')
@@ -1087,7 +1087,7 @@ if ('Authority' in col_names):
     in_regexp = r' in .*?(\)|$)'
     check_in = return_matches(arr = taxa['Authority'], regexp = in_regexp)
     if len(check_in) > 0:
-        in_samp = set(check_in)
+        in_samp = list(set(check_in))
         if len(in_samp) > subset_len:
             in_samp = random.sample(in_samp, subset_len)
         print("\tpublication included in author citation\t...removing all content including and following 'in' (", len(check_in), " matches)\n\t\t", ', '.join(in_samp), sep = '')
@@ -1095,7 +1095,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_in = return_matches(arr = taxa['InfraspecificAuthority'], regexp = in_regexp)
         if (len(check_in) > 0):
-            in_samp = set(check_in)
+            in_samp = list(set(check_in))
             if len(in_samp) > subset_len:
                 in_samp = random.sample(in_samp, subset_len)
             print("\tpublication included in infraspecific author citation\t...removing all content including and following 'in' (", len(check_in), " matches)\n\t\t", ', '.join(in_samp), sep = '')
@@ -1103,7 +1103,7 @@ if ('Authority' in col_names):
     # some authorities are listed to unnecessary specificity for the purposes of harmonization, e.g., "Symphyotrichum longifolium sensu G.L. Nesom, non Lam." for these cases, remove all content following "non." this can be particularly misleading, because the standardization method will match to the excluded authority.
     check_anon = return_matches(arr = taxa['Authority'], regexp = r'(^| )auct\.? non .*$')
     if len(check_anon) > 0:
-        anon_samp = set(check_anon)
+        anon_samp = list(set(check_anon))
         if len(anon_samp) > subset_len:
             anon_samp = random.sample(anon_samp, subset_len)
         print("\t'auct. non' included in author citation\t...removing this and following content (", len(check_anon), " matches\n\t\t", ', '.join(anon_samp), sep = '')
@@ -1111,14 +1111,14 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_anon = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'(^| )auct\.? non .*$')
         if (len(check_anon) > 0):
-            anon_samp = set(check_anon)
+            anon_samp = list(set(check_anon))
             if len(anon_samp) > subset_len:
                 anon_samp = random.sample(anon_samp, subset_len)
             print("\t'auct. non' included in infraspecific author citation\t...removing this and following content (", len(check_anon), " matches)\n\t\t", ', '.join(anon_samp), sep = '')
             taxa['InfraspecificAuthority'] = [re.sub(r' auct\.? non .*$', '', v) for v in taxa['InfraspecificAuthority']]
     check_non = return_matches(arr = taxa['Authority'], regexp = r'(^| )non .*$')
     if len(check_non) > 0:
-        non_samp = set(check_non)
+        non_samp = list(set(check_non))
         if len(non_samp) > subset_len:
             non_samp = random.sample(non_samp, subset_len)
         print("\t'non' included in author citation\t...removing this and following content (", len(check_non), " matches)\n\t\t", ', '.join(non_samp), sep = '')
@@ -1126,7 +1126,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_non = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'(^| )non .*$')
         if (len(check_non) > 0):
-            non_samp = set(check_non)
+            non_samp = list(set(check_non))
             if len(non_samp) > subset_len:
                 non_samp = random.sample(non_samp, subset_len)
             print("\t'non' included in infraspecific author citation\t...removing this and following content (", len(check_non), " matches)\n\t\t", ', '.join(non_samp), sep = '')
@@ -1135,7 +1135,7 @@ if ('Authority' in col_names):
     alt_regexp = '(^| | ?\()(p[\. ]{1,2}p\.?|pro hybr\.?|pro sp\.?|pro syn\.?|pro syn\.?|pro nm\.?|nome?n?[\. ]{1,2}inval\.?|nome?n?[\. ]{1,2}ambig\.?|nome?n?[\. ]{1,2}illeg\.?|nome?n?[\. ]{1,2}rej\.?|nome?n?[\. ]{1,2}inq\.?|nome?n?[\. ]{1,2}prov\.?|nome?n?[\. ]{1,2}obsc\.?|nome?n?[\. ]{1,2}nud\.?|nome?n?[\. ]{1,2}dub\.?|nome?n?[\. ]{1,2}cons?[\. ]{1,2}prop\.?|nom[\. ]{1,2}conserv\.?|nome?n?[\. ]{1,2}cons?\.?|s[\. ]{1,2}ampl\.?|s[\. ]{1,2}l\.?|s[\. ]{1,2}s\.|s[\. ]{1,2}lat\.?|sens[\.u] ?lat[\.o]|sens[\.u] ?ampl[\.o]|s[\. ]str\.?|sens[\.u] ?str\.?|sens[\.u] ?strict[\.o]|emend\.?|emendavit|mut[\. ]{1,2}char\.?|ined\.?|mutatis characteribus|excl[\. ]{1,2}gen\.?|excl[\. ]{1,2}sp\.?|excl[\. ]{1,2}var\.?).*'
     check_alt = return_matches(arr = taxa['Authority'], regexp = alt_regexp)
     if len(check_alt) > 0:
-        alt_samp = set(check_alt)
+        alt_samp = list(set(check_alt))
         if len(alt_samp) > subset_len:
             alt_samp = random.sample(alt_samp, subset_len)
         print("\talteration/circumscription included in author citation (e.g., emend.)\t...removing all all content including and following this (", len(check_alt), " matches)\n\t\t", ', '.join(alt_samp), sep = '')
@@ -1143,7 +1143,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_alt = return_matches(arr = taxa['InfraspecificAuthority'], regexp = alt_regexp)
         if (len(check_alt) > 0):
-            alt_samp = set(check_alt)
+            alt_samp = list(set(check_alt))
             if len(alt_samp) > subset_len:
                 alt_samp = random.sample(alt_samp, subset_len)
             print("\talteration/circumscription included in infraspecific author citation (e.g., emend.)\t...removing all content including and following this (", len(check_alt), " matches)\n\t\t", ', '.join(alt_samp), sep = '')
@@ -1151,7 +1151,7 @@ if ('Authority' in col_names):
     # similarly, the "sensu" should be removed from the authority
     check_sens = return_matches(arr = taxa['Authority'], regexp = r'(^| )sensu ')
     if len(check_sens) > 0:
-        sens_samp = set(check_sens)
+        sens_samp = list(set(check_sens))
         if len(sens_samp) > subset_len:
             sens_samp = random.sample(sens_samp, subset_len)
         print("\t'sensu' included in author citation\t...removing (", len(check_sens), " matches)\n\t\t", ', '.join(sens_samp), sep = '')
@@ -1159,7 +1159,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_sens = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'(^| )sensu ')
         if (len(check_sens) > 0):
-            sens_samp = set(check_sens)
+            sens_samp = list(set(check_sens))
             if len(sens_samp) > subset_len:
                 sens_samp = random.sample(sens_samp, subset_len)
             print("\t'sensu' included in infraspecific author citation\t...removing (", len(check_sens), " matches)\n\t\t", ', '.join(sens_samp), sep = '')
@@ -1167,7 +1167,7 @@ if ('Authority' in col_names):
     # remove any text in square brackets
     check_sqbr = return_matches(arr = taxa['Authority'], regexp = r' ?\[.*\]')
     if len(check_sqbr) > 0:
-        sqbr_samp = set(check_sqbr)
+        sqbr_samp = list(set(check_sqbr))
         if len(sqbr_samp) > subset_len:
             sqbr_samp = random.sample(sqbr_samp, subset_len)
         print("\tsquare brackets included in author citation\t...removing brackets and contents (", len(check_sqbr), "matches)\n\t\t", ', '.join(sqbr_samp), sep = '')
@@ -1175,7 +1175,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_sqbr = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r' ?\[.*\]')
         if (len(check_sqbr) > 0):
-            sqbr_samp = set(check_sqbr)
+            sqbr_samp = list(set(check_sqbr))
             if len(sqbr_samp) > subset_len:
                 sqbr_samp = random.sample(sqbr_samp, subset_len)
             print("\tsquare brackets included in infraspecific author citation\t...removing brackets and contents (", len(check_sqbr), " matches)\n\t\t", ', '.join(sqbr_samp), sep = '')
@@ -1183,7 +1183,7 @@ if ('Authority' in col_names):
     # change any et to ampersand
     check_et = return_matches(arr = taxa['Authority'], regexp = r'\b[Ee]t\b(?! al)')
     if len(check_et) > 0:
-        et_samp = set(check_et)
+        et_samp = list(set(check_et))
         if len(et_samp) > subset_len:
             et_samp = random.sample(et_samp, subset_len)
         print("\t'et' in author citation\t...replacing with ampersand (", len(check_et), " matches)\n\t\t", ', '.join(et_samp), sep = '')
@@ -1191,7 +1191,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_et = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'\bet\b(?! al)')
         if len(check_et) > 0:
-            et_samp = set(check_et)
+            et_samp = list(set(check_et))
             if len(et_samp) > subset_len:
                 et_samp = random.sample(et_samp, subset_len)
             print("\t'et' in infraspecific author citation\t...replacing with ampersand (", len(check_et), " matches)\n\t\t", ', '.join(et_samp), sep = '')
@@ -1199,7 +1199,7 @@ if ('Authority' in col_names):
     # include spaces around ampersand
     check_amp = return_matches(arr = taxa['Authority'], regexp = r' ?& ?')
     if len(check_amp) > 0:
-        amp_samp = set(check_amp)
+        amp_samp = list(set(check_amp))
         if len(amp_samp) > subset_len:
             amp_samp = random.sample(amp_samp, subset_len)
         print("\tstandardizing spacing around ampersands in author (", len(check_amp), " matches)\n\t\t", ', '.join(amp_samp), sep = '')
@@ -1207,7 +1207,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_amp = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r' ?& ?')
         if len(check_amp) > 0:
-            amp_samp = set(check_amp)
+            amp_samp = list(set(check_amp))
             if len(amp_samp) > subset_len:
                 amp_samp = random.sample(amp_samp, subset_len)
             print("\tstandardizing spacing around ampersands in infraspecific author (", len(check_amp), " matches)\n\t\t", ', '.join(amp_samp), sep = '')
@@ -1216,7 +1216,7 @@ if ('Authority' in col_names):
     com_regexp = '(^ *, *| *, *$)'
     check_com = return_matches(arr = taxa['Authority'], regexp = com_regexp)
     if len(check_com) > 0:
-        com_samp = set(check_com)
+        com_samp = list(set(check_com))
         if len(com_samp) > subset_len:
             com_samp = random.sample(com_samp, subset_len)
         print("\tcommas at beginning and/or end of authority\t...removing (", len(check_com), " matches)\n\t\t", ', '.join(com_samp), sep = '')
@@ -1224,7 +1224,7 @@ if ('Authority' in col_names):
     if 'InfraspecificAuthority' in col_names:
         check_com = return_matches(arr = taxa['InfraspecificAuthority'], regexp = com_regexp)
         if len(check_com) > 0:
-            com_samp = set(check_com)
+            com_samp = list(set(check_com))
             if len(com_samp) > subset_len:
                 com_samp = random.sample(com_samp, subset_len)
             print("\tcommas at beginning and/or end of infraspecific authority\t...removing (", len(check_com), " matches)\n\t\t", ', '.join(com_samp), sep = '')
@@ -1233,14 +1233,14 @@ if ('Authority' in col_names):
     lowercase_regexp = r'(?!hort\.)(?!fil\.)\b[a-z][a-zA-Z0-9]{2,}'
     check_lower = return_matches(arr = taxa['Authority'], regexp = lowercase_regexp)
     if len(check_lower) > 0:
-        lower_samp = set(check_lower)
+        lower_samp = list(set(check_lower))
         if len(lower_samp) > subset_len:
             lower_samp = random.sample(lower_samp, subset_len)
         print("\tNOTE: identified word(s) in authority that start(s) with a lowercase letter! check manually! (", len(check_lower), " matches)\n\t\t", ', '.join(lower_samp), sep = '')
     if 'InfraspecificAuthority' in col_names:
         check_lower = return_matches(arr = taxa['InfraspecificAuthority'], regexp = lowercase_regexp)
         if len(check_lower) > 0:
-            lower_samp = set(check_lower)
+            lower_samp = list(set(check_lower))
             if len(lower_samp) > subset_len:
                 lower_samp = random.sample(lower_samp, subset_len)
             print("\tNOTE: identified word(s) in infraspecific authority that start(s) with a lowercase letter! check manually! (", len(check_lower), " matches)\n\t\t", ', '.join(lower_samp), sep = '')
@@ -1267,7 +1267,7 @@ if ('Authority' in col_names):
         # replace fil with f.
         check_fil = return_matches(arr = taxa['Authority'], regexp = r'\.?(\.| )fil\.?( |$|\)|,)')
         if len(check_fil) > 0:
-            fil_samp = set(check_fil)
+            fil_samp = list(set(check_fil))
             if len(fil_samp) > subset_len:
                 fil_samp = random.sample(fil_samp, subset_len)
             print("\t'fil' identified in authorities\t...standardizing (", len(check_fil), " matches)\n\t\t", ', '.join(fil_samp), sep = '')
@@ -1275,7 +1275,7 @@ if ('Authority' in col_names):
         if 'InfraspecificAuthority' in col_names:
             check_ifil = return_matches(arr = taxa['InfraspecificAuthority'], regexp = r'\.?(\.| )fil\.?( |$|\)|,)')
             if len(check_ifil) > 0:
-                ifil_samp = set(check_ifil)
+                ifil_samp = list(set(check_ifil))
                 if len(ifil_samp) > subset_len:
                     ifil_samp = random.sample(ifil_samp, subset_len)
                 print("\t'fil' identified in infraspecific authorities\t...standardizing (", len(check_ifil), " matches)\n\t\t", ', '.join(ifil_samp), sep = '')
@@ -1347,7 +1347,7 @@ if 'InfraspecificName' in col_names:
             cult_idx = [x for x in cult_idx if x not in rank_idx]
         check_cult = taxa.loc[cult_idx, 'InfraspecificName']
         if len(check_cult) > 0:
-            cult_samp = set(check_cult)
+            cult_samp = list(set(check_cult))
             if len(cult_samp) > subset_len:
                 cult_samp = random.sample(cult_samp, subset_len)
             print("\tsuspected cultivar names to cultivar column (", len(check_cult), " matches)\n\t\t", ', '.join(cult_samp), sep = '')
@@ -1362,7 +1362,7 @@ if 'InfraspecificName' in col_names:
     infrank_regexp = '(?:^| )(var\.|subvar\.|convar\.|subsp\.|f\.|subf\.)(?:$| |[a-z])'
     check_infrank = return_matches(arr = taxa['InfraspecificName'], regexp = infrank_regexp)
     if len(check_infrank) > 0:
-        rank_infsamp = set(check_infrank)
+        rank_infsamp = list(set(check_infrank))
         if len(rank_infsamp) > subset_len:
             rank_infsamp = random.sample(rank_infsamp, subset_len)
         print("\tinfraspecific ranks to rank column (", len(check_infrank), " matches)\n\t\t", ', '.join(rank_infsamp), sep = '')
@@ -1387,7 +1387,7 @@ if cv_bool:
     initials_regexp = '[A-Z]{2,}'
     check_initials = return_matches(arr = taxa['Cultivar'], regexp = initials_regexp)
     if len(check_initials) > 0:
-        initials_samp = set(check_initials)
+        initials_samp = list(set(check_initials))
         if len(initials_samp) > subset_len:
             initials_samp = random.sample(initials_samp, subset_len)
         print("\tcultivar names with initials identified (", len(check_initials), " matches).\n\tNOTE: these cultivar names will not be converted to title case!\n\t\t", ', '.join(initials_samp), sep = '')
