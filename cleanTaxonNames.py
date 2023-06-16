@@ -1398,7 +1398,7 @@ if cv_bool:
             # remove cv. (not standardized)
             this_cv = re.sub("\"|cvs?\.? |cvs?\. ?", "", this_cv)
             # remove apostrophes (except when they represent possession, articles, etc.)
-            this_cv = re.sub("(?<![dlomDLOM])(?<!'n)(?<!s )(?<!'[DLOM])'(?!s )(?!n')", "", this_cv)
+            this_cv = re.sub("(?<![dlomDLOM])(?<!'n)(?<!s )(?<!'[DLOM])'(?!s )(?!n')|^['\"]|['\"]$", "", this_cv)
             # if cultivar name includes initials, do not change to title case
             check_initials = bool(re.search(initials_regexp, this_cv))
             if check_initials:
@@ -1408,7 +1408,7 @@ if cv_bool:
             # some letters/words should not be capitalized in cultivar names, depending on language
             # apostrophe s
             this_cv = re.sub("([A-Za-zÀ-ÿĀ-ſƀ-ȳ])'S( |'$)", "\\1's\\2", this_cv)
-            # d' or l' in romanic languages
+            # d' or l' in romance languages
             this_cv = re.sub("D'([A-Za-zÀ-ÿĀ-ſƀ-ȳ])", "d'\\1", this_cv)
             this_cv = re.sub(" L'([A-Za-zÀ-ÿĀ-ſƀ-ȳ])", " l'\\1", this_cv)
             # articles like the, de, des, di, der, etc.
