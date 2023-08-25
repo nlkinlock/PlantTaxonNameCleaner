@@ -235,7 +235,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
         raise ValueError("genus not identified")
     # test whether taxon is a nothospecies
     # first determine whether infraspecific name or cultivar exists to set search range
-    infrank_cv_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\.?$|^(notho)?ssp\.?$|^(notho)?(con|sub)?var\.?$|^(notho)?(con|sub)?v\.?$|^(notho)?(sub)?f\.?$|^(notho)?(sub)?f[ao]?\.?$|^(notho)?(sub)?forma\.?$|^(notho)?(sub)?fma\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$|^[\'"]|^cv\.?$', mode = 'index')
+    infrank_cv_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\.?$|^(notho)?ssp\.?$|^(notho)?(con|sub)?var\.?$|^(notho)?(con|sub)?v\.?$|^(notho)?(sub)?f\.?$|^(notho)?(sub)?f[ao]?\.?$|^(notho)?(sub)?forma\.?$|^(notho)?(sub)?fma\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4\'"]|^cv\.?$', mode = 'index')
     if len(infrank_cv_idx) > 0:
         taxon_range = this_taxon[1:infrank_cv_idx[0]]
     else:
@@ -250,7 +250,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
         this_taxon.append('sp.')
     else:
         check_ident_sp = bool(re.search(r"^spp?.?$", this_taxon[1]))
-        check_ident_cv = bool(re.search(r"^['\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.']+", this_taxon[1]))
+        check_ident_cv = bool(re.search(r"^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+", this_taxon[1]))
     if (check_ident_sp | check_ident_cv):
         if check_ident_sp:
             if verbose:
@@ -337,7 +337,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     elif (len(cvgp_idx_init) > 1):
         print(this_taxon_init)
         raise ValueError("multiple cultivar groups detected")
-    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\.?$|^cv\.gp\.?$|^['\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.']{2,}['\"]$|^['\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.']+$", mode = 'index')
+    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\.?$|^cv\.gp\.?$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+$", mode = 'index')
     # account for dutch author 't Hart
     cv_idx_init = [x for x in cv_idx_init if this_taxon[x] != "'t"]
     if (len(cv_idx_init) > 0):
