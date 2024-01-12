@@ -796,7 +796,7 @@ n_row_sp = len(taxa)
 if (n_row_gen - n_row_sp > 0):
     print("\tremoved", n_row_gen - n_row_sp, "rows missing SpecificEpithet")
 # check for undefined specific epithets, spp, sp, etc.
-spp_regexp = '^ *[Ss]pp?\.? *$|^ *[Ss]pec\.? *$'
+spp_regexp = '^ *[Ss]pecies *$|^ *[Ss]pp?\.? *$|^ *[Ss]pec\.? *$|^ *\?* *$'
 check_spp = return_matches(arr = taxa['SpecificEpithet'], regexp = spp_regexp)
 if len(check_spp) > 0:
     print("\t", len(check_spp), "taxa with undefined specific epithets\t...removing\n\t\t", ', '.join(set(check_spp)))
