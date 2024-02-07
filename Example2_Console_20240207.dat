@@ -1,0 +1,137 @@
+cleanTaxonNames.py: began at 10:50:14
+
+filename: /media/nlkhd/Nicole/Postdoc/PlantTaxonNameCleaner/Example2.csv
+
+old text? (replace authority abbrevs and move suspected cultivars): False
+authorities listed in 'TaxonName' column?: True
+edit cultivar names?: True
+
+NOTE: console output will show a random subset of 40 matches to save space!
+	to show more, edit 'subset_len' parameter in cleanTaxonNames.py
+
+loaded file = /media/nlkhd/Nicole/Postdoc/PlantTaxonNameCleaner/Example2.csv
+	 912 rows (taxa) in file
+
+taxon names not split into genus, specific epithet, and infraspecific name
+
+'TaxonName' column detected, splitting names
+*this is prone to errors! check output carefully!*
+
+checking for taxa not defined to species level or below
+
+removed whitespace in all columns
+
+genus name to sentence case, specific and infraspecific epithets to lowercase
+
+checking for ligatures and alternative quotation characters
+	checking column: Genus
+	checking column: SpecificEpithet
+	checking column: Authority
+5
+5	(1 matches) replacing	(Buc’hoz) Dandy
+	with	(Buc'hoz) Dandy
+	checking column: InfraspecificRank
+	checking column: InfraspecificName
+	checking column: InfraspecificAuthority
+	checking column: Cultivar
+
+checking for alternative whitespace characters, escape characters, or question marks
+	checking column: Genus
+	checking column: SpecificEpithet
+	checking column: Authority
+	checking column: InfraspecificRank
+	checking column: InfraspecificName
+	checking column: InfraspecificAuthority
+	checking column: Cultivar
+
+checking for accented characters (genus, specific epithet, and infraspecific name only)
+	checking column: Genus
+	all remaining characters are ascii
+	checking column: SpecificEpithet
+	NOTE: non-ascii characters identified, check manually!
+		 ×
+	checking column: InfraspecificRank
+	all remaining characters are ascii
+	checking column: InfraspecificName
+	all remaining characters are ascii
+
+checking for numbers
+
+checking for unusual special characters (authority and cultivar)
+	checking column: Authority
+	no unusual special characters
+	checking column: InfraspecificAuthority
+	no unusual special characters
+	checking column: Cultivar
+	no unusual special characters
+
+checking for extra spaces
+
+checking for nonstandard characters in genus, specific epithet
+	checking column: Genus
+	checking column: SpecificEpithet
+	checking column: InfraspecificName
+
+checking for parentheses spacing errors and synonyms in name
+
+correcting alternative genera spelling
+	nothing to be replaced
+
+checking for fungal genera using GBIF list
+	note: some fungi genus taxon names are also vascular plant genus taxon names
+	NOTE: genera found that match fungi genus names! check manually!
+	Lobularia
+	Scutellaria
+
+checking for bryophyte genera using MOBOT list
+	note: some bryophyte genus taxon names are also vascular plant genus taxon names
+	no potential bryophyte genera identified
+
+checking for genera in WCVP
+	all genera were found in WCVP
+
+standardizing author names
+	nonstandard spacing of author initials	...standardizing (119 matches)
+		(Baker) L. S. Hannibal, N. E. Br., (Bunge) A. DC., (L.) O. E. Schulz, Siebold & Zucc. ex J. J. Hoffm. & J. H. Schult. bis, (Stokes) F. A. Barkley, (Kom.) H. Ohba, Hu & W. C. Cheng, Fisch. & C. A. Mey., (Rupr.) K. Koch, Salisb. ex K. D. Koenig & Sims, S. Watson, J. Koenig, F. Delaroche, (Willd.) Ohwi & H. Ohashi, (L.) H. Karst., D. Don ex G. Don, (Carrière) J. Houz., (Kunth) P. H. Raven, L. H. Bailey, (L.) C. Presl, (L.) A. Braun, E. Vilm., I. M. Johnst., (H. Knight) Engl., J. Ellis, (Maxim.) A. Berger, Engelm. & A. Gray, (Hook.) K. Koch, C. A. Mey., M. Bieb., F. T. Wang & T. Tang, Y. N. Lee & T. C. Lee, F. W. Schmidt, (Hoffm.) H. Wolff, S. K. Hyun & Ahn, (Thunb.) K. Schum., (L.) A. Gray, hort. ex W. Watson, (L.) C. C. Gmel.
+	nonstandard spacing of infraspecific author initials	...standardizing (39 matches)
+		(Makino) T. Yamanaka, C. K. Schneid., (Ser.) H. Hara, (Thunb.) H. Hara, Y. N. Lee & K. B. Yim, Kikuchi & F. Maek., (A. Chev.) A. Chev., (Sm.) W. D. J. Koch, (Maxim.) Rehder & E. H. Wilson, S. C. Hsu, (Hayata) H. W. Li, (Nakai) Y. C. Chu, (Makino) T. Koyama, (Spreng.) P.H. Raven, (Trautv. & C. A. Mey.) Kitam., (André) E. J. Palmer & Steyerm., (Bernh. ex Willd.) C. Y. Wu & S. C. Huang, Booth ex G. Kirchn., (H. Lév.) M. Sugim., (Lindl.) C. K. Schneid., (Siebold & Zucc.) E. H. Wilson, (Osborn) Q. Y. Xiang, Y. N. Lee, (W. A. Nicholson) Rehder, (E. H. Wilson) H. Hara, (Miq.) P. D. Sell, (L. H. Bailey) Rehder, (Blume) A. Camus, (Kitag.) Y. C. Chu, (Nakai) T. B. Lee, T. B. Lee
+	'ex' in author citation	...standardizing (64 matches)
+		Royle ex Wight, (Lavallée ex H.Otto) Kitam., D.Don ex G.Don, Siebold ex Van Houtte, Siebold ex Tanaka, Zucc. ex Endl., W.Bartram ex Marshall, (Humb. & Bonpl. ex Willd.) Buchenau, hort. ex Becc., (Nakai ex Rehder) T.H.Chung, P.S.Toh, D.B.Lee & F.J.Lee, Makino ex Y.Yabe, Bureau ex Lavallée, Nakai ex Rehder, (Thunb. ex L. f.) Siebold & Zucc., (Siebold & Zucc. ex Steud.) Makino ex Nakai, Bolus ex Adlam, (Thunb. ex Houtt.) Miq., (Gaertn.) Libosch. ex Fisch. & C.A.Mey., Siebold & Zucc. ex J.J.Hoffm. & J.H.Schult. bis, Waldst. & Kit. ex Willd., (Thunb.) Zoll. & Mor. ex Zoll., Mill. Ex Münchh., (Lodd. ex Lindl.) Munro, (L.) L'Her. ex Vent, hort. ex Siebold & Voss, hort. ex W.Watson, (Rovelli ex André) Rehder, Phil. ex Baker, Bürger ex Hance, Duchesne ex Rozier, Graebn. ex Diels, (Trautv. ex Maxim.) Maxim., Warder ex Engelm., Salisb. ex K.D.Koenig & Sims, (Humb. & Bonpl. ex Willd.) Bercht. & J.Presl, W.T.Aiton ex G.Don, (Roxb. ex D.Don) G.Don, Siebold ex Blume, Siebold & Zucc. ex Iinuma, (L.) Cass. ex Spach
+	'ex' in infraspecific author citation	...standardizing (7 matches)
+		Vilm. ex Rehder, (Bernh. ex Willd.) C.Y.Wu & S.C.Huang, (Miyoshi ex Makino & Nemoto) Ohwi, (Schltdl.) Siebold ex Miq., Booth ex G.Kirchn., (Hoffmanns. ex Zucc.) Lourteig, (Mitford) Stapf ex Rendle
+	standardizing spacing around ampersands in author (91 matches)
+		S.K.Hyun & Ahn, Franch. & Sav., F.T.Wang & T.Tang, (Siebold & Zucc.) Planch., Engelm. & A.Gray, (Franch. & Sav.) Matsum., (Siebold & Zucc.) Kitag., Siebold & Zucc., (Rupr. & Maxim.) S.Y.Hu, (Siebold & Zucc.) Carrière, (Thunb.) Ohwi & H.Ohashi, (Siebold & Zucc.) Nakai, (L.) Pelser & Meijden, Torr. & A.Gray, (Siebold & Zucc.) Endl., (Rupr. & Maxim.) Maxim., (Schult. & Schult. f.) Asch. & Graebn., Makino & Shiras., (Siebold & Zucc.) Fern.-Vill., (Thunb. ex L. f.) Siebold & Zucc., (Thunb.) Zoll. & Mor. ex Zoll., (Siebold) Siebold & Zucc., (Siebold & Zucc.) Benth. & Hook. f. ex Trautv., (Nakai ex Rehder) T.H.Chung, P.S.Toh, D.B.Lee & F.J.Lee, hort. ex Siebold & Voss, (Vent.) Anderb. & Haegi, C.F.Mill. & M.Kim, (Siebold & Zucc. ex Steud.) Makino ex Nakai, (Humb. & Bonpl. ex Willd.) Buchenau, Sibth. & Sm., G.Gaertn., B.Mey. & Scherb., (Ruiz & Pav.) D.Don, Fisch. & C.A.Mey., Lindl. & Paxton, Hu & W.C.Cheng, (Thunb.) Siebold & Zucc., Siebold & Zucc. ex J.J.Hoffm. & J.H.Schult. bis, Y.N.Lee & T.C.Lee, (Siebold & Zucc.) C.Koch, (Nakai) K.Bremer & Humphries
+	standardizing spacing around ampersands in infraspecific author (12 matches)
+		(Thunb.) Bowles & Stearn, (Maxim.) Rehder & E.H.Wilson, (Miyoshi ex Makino & Nemoto) Ohwi, (Siebold & Zucc.) E.H.Wilson, (Bernh. ex Willd.) C.Y.Wu & S.C.Huang, (M.Roem.) Masamura & Yanagih., Y.N.Lee & K.B.Yim, (Trautv. & C.A.Mey.) Kitam., Kikuchi & F.Maek., (André) E.J.Palmer & Steyerm., Siebold & Zucc., (Siebold & Zucc.) Hand.-Mazz.
+	NOTE: identified word(s) in authority that start(s) with a lowercase letter! check manually! (4 matches)
+		(Buc'hoz) Dandy, (Buc'hoz) Rehder, Siebold & Zucc. ex J.J.Hoffm. & J.H.Schult. bis
+	converting authority full names to standard forms
+176 	replacing	 Linnaeus 
+	with	 L.
+147 	replacing	 (Nakai) Kitamura 
+	with	 (Nakai) Kitam.
+
+checking infraspecific ranks
+	alternative infraspecific rank spelling identified	...standardizing (48 matches)
+		forma
+
+checking infraspecific names
+
+checking for infraspecific ranks in infraspecific names
+
+standardizing cultivar names, e.g., 'Cultivar Name'
+
+infraspecific and specific authorities detected
+	final authority set to authority of the finest taxonomic level
+
+checking for genera and epithets with multiple words
+
+checking for periods in species epithets
+
+checking for periods in infraspecific epithets
+
+removed 0 infraspecific ranks because no infraspecific name was present
+NOTE: checking empty string and returning false (this error only arises once)
+	index	 0
+
+saving final cleaned file to	 /media/nlkhd/Nicole/Postdoc/PlantTaxonNameCleaner/Example2_TextCleaned_20240207.csv
