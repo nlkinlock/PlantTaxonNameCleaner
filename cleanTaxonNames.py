@@ -10,6 +10,12 @@ import csv
 #
 print("cleanTaxonNames.py: began at", datetime.now().strftime("%H:%M:%S"))
 #
+# uncomment and use only if debugging
+full_filename = "~/Postdoc/WorldCuP/Sources/Galapagos/Galapagos_Guezou_2010.csv"
+old_text_bool = False
+auth_split_bool = True
+cv_bool = True
+#
 full_filename = sys.argv[1]
 filename = full_filename[:-4]
 check_file = os.path.exists(full_filename)
@@ -193,6 +199,7 @@ def return_matches(arr, regexp, mode = 'string'):
                 if (len(this_check)):
                     check.append(y)
     return(check)
+# split taxon names in 'TaxonName' column into their parts
 def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     gen_idx = [0]
     spp_idx = []
@@ -343,9 +350,14 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     if (len(cv_idx_init) > 0):
         if (len(cv_idx_init) > 1):
             print("multiple cultivars or cultivar groups detected\n\t", this_taxon_init)
-        # assume cultivar name is the entire part of name following first cv., cv.gp., or 'Cultivar Name' word
-        # to the end of the name
-        cv_idx = [i for i, x in enumerate(this_taxon) if i >= cv_idx_init[0]]
+        if (not authority):
+            # assume cultivar name is the entire part of name following first cv., cv.gp., or 'Cultivar Name' word
+            # to the end of the name, only do this if authorities are not included!
+            cv_idx = [i for i, x in enumerate(this_taxon) if i >= cv_idx_init[0]]
+        else:
+            # if authorities included, only split cv if 'Cultivar Name' method is used
+            cv_idx_init2 = return_matches(arr = this_taxon, regexp = "^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]+$|^[A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]+[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$", mode = 'index')
+            cv_idx = [i for i, x in enumerate(this_taxon) if i >= min(cv_idx_init2) and i <= max(cv_idx_init2)]
         this_cv = [e for i, e in enumerate(this_taxon) if i in cv_idx]
         if (len(cv_idx) > 1):
             this_cv = " ".join(this_cv)
@@ -386,14 +398,14 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
             temp_auth = " ".join(temp_auth_init)
             if verbose:
                 print("\tauthority before infraspecific name:", temp_auth)
-    elif (len(this_taxon) > 2):
-        # if rank is not present, check whether the third element is a lowercase word with no special characters
+    elif (len(this_taxon) > (spp_idx[-1] + 1)):
+        # if rank is not present, check whether the element after the species name is a lowercase word with no special characters
         # if so, assign as infraspecific name
         # this is prone to error! check manually!
-        poten_infra = re.findall("^[a-z-]{2,}$", this_taxon[2])
-        if (len(poten_infra) > 1):
+        poten_infra = re.findall("^[a-z-]{3,}$", this_taxon[spp_idx[-1] + 1])
+        if (len(poten_infra) > 0):
             print(this_taxon_init, "\n\tcheck manually! potential infraspecific name detected with no rank:", poten_infra[0])
-            infra_idx = [2]
+            infra_idx = [spp_idx[-1] + 1]
             this_infra = poten_infra[0]
     # test whether taxon is a nothosubspecies, nothovar, etc.
     if len(infra_rank_idx) > 0:
@@ -879,7 +891,7 @@ for x in range(len(col_names)):
         num_samp = list(set(check_num))
         if len(num_samp) > subset_len:
             num_samp = random.sample(num_samp, subset_len)
-        print(col_names[x], "\tNOTE: numbers identified, check manually! (", len(check_num)," matches) \n\t\t", ', '.join(num_samp), sep ='')
+        print(col_names[x], "\tNOTE: numbers identified, check manually! (", len(check_num)," matches) \n\t\t", ', '.join(num_samp), sep = '')
 #
 # check for unusual accented characters for authority and cultivar, to be checked manually
 print("\nchecking for unusual special characters (authority and cultivar)")
