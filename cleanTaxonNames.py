@@ -10,11 +10,11 @@ import csv
 #
 print("cleanTaxonNames.py: began at", datetime.now().strftime("%H:%M:%S"))
 #
-# uncomment and use only if debugging
-full_filename = "~/Postdoc/WorldCuP/Sources/Galapagos/Galapagos_Guezou_2010.csv"
-old_text_bool = False
-auth_split_bool = True
-cv_bool = True
+# !!! uncomment and use only if debugging !!!
+# full_filename = "~/Postdoc/WorldCuP/Sources/Galapagos/Galapagos_Guezou_2010.csv"
+# old_text_bool = False
+# auth_split_bool = True
+# cv_bool = True
 #
 full_filename = sys.argv[1]
 filename = full_filename[:-4]
@@ -1386,6 +1386,14 @@ if 'InfraspecificName' in col_names:
             taxa['InfraspecificRank'] = taxa['InfraspecificRank'] + sep_output[0]
     elif 'InfraspecificRank' not in col_names:
         taxa['InfraspecificRank'] = [str() for c in 'c' * taxa.shape[0]]
+    acc_rank = ["", "subsp.", "var.", "convar.", "subvar.", "f.", "subf."]
+    rank_bool = ~taxa['InfraspecificRank'].isin(acc_rank)
+    acc_rank_idx = [i for i, x in enumerate(rank_bool) if x]
+    if len(acc_rank_idx) > 0:
+        match_rank = taxa['InfraspecificRank'].iloc[acc_rank_idx]
+        match_rank = match_rank.unique()
+        match_rank = np.sort(match_rank)
+        print("\nNOTE: nonstandard infraspecific ranks detected after cleaning! check manually!\n\t", '\n\t'.join(match_rank), sep = '')
 else:
     taxa['InfraspecificRank'] = [str() for c in 'c' * taxa.shape[0]]
     taxa['InfraspecificName'] = [str() for c in 'c' * taxa.shape[0]]
