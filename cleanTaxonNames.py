@@ -11,7 +11,7 @@ import csv
 print("cleanTaxonNames.py: began at", datetime.now().strftime("%H:%M:%S"))
 #
 # !!! uncomment and use only if debugging !!!
-# full_filename = "/media/nlkhd//Postdoc/WorldCuP/Sources/SouthKorea/Cheongju/Cheongju_MidongsanArboretum_2022.csv"
+# full_filename = "/media/nlkhd/Nicole/Postdoc/Mentoring/Valentina/Data/TRY/TRYTaxonNames.csv"
 # old_text_bool = False
 # auth_split_bool = True
 # cv_bool = True
@@ -364,6 +364,8 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
             this_cv = " ".join(this_cv)
         elif (len(cv_idx) == 1):
             this_cv = this_cv[0]
+        elif (len(cv_idx) == 0):
+            this_cv = ""
         if verbose:
             print("\ttaxon includes cultivar:", this_cv)
     # check for infraspecific ranks and names
