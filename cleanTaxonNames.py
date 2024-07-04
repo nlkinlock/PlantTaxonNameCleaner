@@ -1478,7 +1478,7 @@ if check_autonym > 0:
 #
 # checking genera and epithets for spaces and replacing with hyphens according to IAPT Shenzhen Code 20.3 "The name of a genus may not consist of two words, unless these words are joined by a hyphen" and 23.1 "The name of a species is a binary combination consisting of the name of the genus followed by a single specific epithet in the form of an adjective, a noun in the genitive, or a word in apposition. If an epithet consisted originally of two or more words, these are to be united or hyphenated."
 print("\nchecking for genera and epithets with multiple words")
-multiword_regexp = '(?<!\u00D7) (?!\u00D7)'
+multiword_regexp = '(?<![\u00D7+]) (?![\u00D7+])'
 check_mwgen = return_matches(arr = taxa['Genus'], regexp = multiword_regexp)
 if len(check_mwgen) > 0:
     print("\tmulti-word genera\t...replacing with hyphen (", len(check_mwgen), " matches)\n\t\t", ', '.join(set(check_mwgen)), sep = '')
