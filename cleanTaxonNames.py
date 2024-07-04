@@ -513,7 +513,8 @@ special_chars = {"\u0132": "IJ",
                 "\u275B": "'",
                 "\u275C": "'",
                 "\u275F": "'",
-                "\u00B4": "'"}
+                "\u00B4": "'",
+                "\u0060": "'"}
 # ICN 60.6.: diacritical signs are not used in Latin plant names
 accent_chars = {"\u00C0": "A",
                 "\u00C1": "A",
