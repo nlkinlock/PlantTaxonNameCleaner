@@ -11,7 +11,8 @@ import csv
 print("cleanTaxonNames.py: began at", datetime.now().strftime("%H:%M:%S"))
 #
 # !!! uncomment and use only if debugging !!!
-# full_filename = "/media/nlkhd/Nicole/Postdoc/Mentoring/Valentina/Data/TRY/TRYTaxonNames.csv"
+# path = "/media/nlkhd/Nicole/Postdoc/PlantTaxonNameCleaner/"
+# full_filename = "/media/nlkhd/Nicole/Postdoc/WorldCuP/Sources/Sweden/Sweden_SKUD_2021.csv"
 # old_text_bool = False
 # auth_split_bool = True
 # cv_bool = True
@@ -1019,7 +1020,23 @@ if len(fungi_idx) > 0:
     match_fungi = np.sort(match_fungi)
     print("\tNOTE: genera found that match fungi genus names! check manually!\n\t", '\n\t'.join(match_fungi), sep = '')
 else:
+    match_fungi = []
     print("\tno potential fungal genera identified")
+#
+# check whether any genera are potential algal genera using MOBOT list
+print("\nchecking for algae genera using MOBOT list\n\tnote: some algae genus taxon names are also vascular plant genus taxon names")
+alga_filename = path + "/GBIF_AlgaeGenera.csv"
+alga_gen = pd.read_csv(alga_filename, delimiter = ',', encoding = 'utf-8')
+alga_bool = taxa['Genus'].isin(alga_gen['taxon_name'])
+alga_idx = [i for i, x in enumerate(alga_bool) if x]
+if len(alga_idx) > 0:
+    match_alga = taxa['Genus'].iloc[alga_idx]
+    match_alga = match_alga.unique()
+    match_alga = np.sort(match_alga)
+    print("\tNOTE: genera found that match algae genus names! check manually!\n\t", '\n\t'.join(match_alga), sep = '')
+else:
+    match_alga = []
+    print("\tno potential algae genera identified")
 #
 # check whether any genera are potential bryophyte genera using MOBOT list
 print("\nchecking for bryophyte genera using MOBOT list\n\tnote: some bryophyte genus taxon names are also vascular plant genus taxon names")
@@ -1033,6 +1050,7 @@ if len(bryo_idx) > 0:
     match_bryo = np.sort(match_bryo)
     print("\tNOTE: genera found that match bryophyte genus names! check manually!\n\t", '\n\t'.join(match_bryo), sep = '')
 else:
+    match_bryo = []
     print("\tno potential bryophyte genera identified")
 #
 # check whether all genera are present in APG IV and give warnings for mismatches
@@ -1048,6 +1066,16 @@ if len(gen_idx) > 0:
     print("\tNOTE: genera found that are not present in WCVP! check manually!\n\t", '\n\t'.join(match_gen), sep = '')
 else:
     print("\tall genera were found in WCVP")
+#
+# check whether the genera that are not present in WCVP are also likely fungi, algae, or bryophytes
+print("\nchecking whether the genera that are not present in WCVP are likely fungi, algae, or bryophytes")
+match_nonvasc = np.concatenate([match_fungi, match_alga, match_bryo])
+match_vasc = [x for x in match_gen if x not in match_nonvasc]
+if len(match_vasc) > 0:
+    match_vasc = np.sort(match_vasc)
+    print("\tNOTE: genera found that are not present in WCVP that are also not likely fungi, algae, or bryophytes! check manually!\n\t", '\n\t'.join(match_vasc), sep = '')
+else:
+    print("\tall genera that are not present in WCVP may be fungi, algae, or bryophytes")
 #
 if ('Authority' in col_names):
     print("\nstandardizing author names")
