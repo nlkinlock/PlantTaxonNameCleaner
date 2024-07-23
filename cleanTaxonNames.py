@@ -1064,18 +1064,17 @@ if len(gen_idx) > 0:
     match_gen = match_gen.unique()
     match_gen = np.sort(match_gen)
     print("\tNOTE: genera found that are not present in WCVP! check manually!\n\t", '\n\t'.join(match_gen), sep = '')
+    # check whether the genera that are not present in WCVP are also likely fungi, algae, or bryophytes
+    print("\nchecking whether the genera that are not present in WCVP are likely fungi, algae, or bryophytes")
+    match_nonvasc = np.concatenate([match_fungi, match_alga, match_bryo])
+    match_vasc = [x for x in match_gen if x not in match_nonvasc]
+    if len(match_vasc) > 0:
+        match_vasc = np.sort(match_vasc)
+        print("\tNOTE: genera found that are not present in WCVP that are also not likely fungi, algae, or bryophytes! check manually!\n\t", '\n\t'.join(match_vasc), sep = '')
+    else:
+        print("\tall genera that are not present in WCVP may be fungi, algae, or bryophytes")
 else:
     print("\tall genera were found in WCVP")
-#
-# check whether the genera that are not present in WCVP are also likely fungi, algae, or bryophytes
-print("\nchecking whether the genera that are not present in WCVP are likely fungi, algae, or bryophytes")
-match_nonvasc = np.concatenate([match_fungi, match_alga, match_bryo])
-match_vasc = [x for x in match_gen if x not in match_nonvasc]
-if len(match_vasc) > 0:
-    match_vasc = np.sort(match_vasc)
-    print("\tNOTE: genera found that are not present in WCVP that are also not likely fungi, algae, or bryophytes! check manually!\n\t", '\n\t'.join(match_vasc), sep = '')
-else:
-    print("\tall genera that are not present in WCVP may be fungi, algae, or bryophytes")
 #
 if ('Authority' in col_names):
     print("\nstandardizing author names")
