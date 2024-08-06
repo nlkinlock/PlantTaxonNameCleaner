@@ -812,6 +812,13 @@ taxa = taxa[taxa['SpecificEpithet'].str.strip().astype(bool)]
 n_row_sp = len(taxa)
 if (n_row_gen - n_row_sp > 0):
     print("\tremoved", n_row_gen - n_row_sp, "rows missing SpecificEpithet")
+# check for taxa above species level, sect., agg., subgen., etc.
+asl_regexp = r'\b[Ss]ect\.?\b|\b[Ss]ection\b|\b[Aa]gg\.?\b|\b[Aa]ggregate\b|\b[Ss]ubge?n?\.?\b|\b[Ss]ubgenus\b'
+check_asl = return_matches(arr = taxa['SpecificEpithet'], regexp = asl_regexp)
+if len(check_asl) > 0:
+    print("\t", len(check_asl), "taxa with undefined specific epithets\t...removing\n\t\t", ', '.join(set(check_asl)))
+    asl_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = asl_regexp)
+    taxa = taxa[~np.array(asl_bool)]
 # check for undefined specific epithets, spp, sp, etc.
 spp_regexp = '^ *[Ss]pecies *$|^ *[Ss]pp?\.? *$|^ *[Ss]pec\.? *$|^ *\?* *$'
 check_spp = return_matches(arr = taxa['SpecificEpithet'], regexp = spp_regexp)
@@ -820,10 +827,10 @@ if len(check_spp) > 0:
     sp_missing_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = spp_regexp)
     taxa = taxa[~np.array(sp_missing_bool)]
 # check for hybrids not assigned to species level
-check_hsp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *[x\u00D7] *$')
+check_hsp = return_matches(arr = taxa['SpecificEpithet'], regexp = r'^ *[x\u00D7] *$|\b[Hh]ybrids?\b')
 if len(check_hsp) > 0:
     print("\t", len(check_hsp), "taxa are hybrids not defined to species level\t...removing\n\t\t", ', '.join(set(check_hsp)))
-    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *[x\u00D7] *$')
+    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = r'^ *[x\u00D7] *$|\b[Hh]ybrids?\b')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # check for cultivars not assigned to species
 check_csp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *cv\.? *$')
@@ -832,8 +839,8 @@ if len(check_csp) > 0:
     hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *cv\.? *$')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # taxa names involving open nomenclature not acceptable (cannot identify unique species)
-# open names include: sp., spp. (see above), sp. nov., sp. aff., aff., cf.
-opnom_regexp = r'(^| )([Ss]pp?\.? ?[Aa]ff\.?|[Ss]pp?\.? ?[Nn]ov[a.]?|[Ss]pec\.? ?[Nn]ov[a.]?|[Ss]pecies [Nn]ov[a.]|[Aa]ff\.?|[Cc]f\.?)(?:$| )'
+# open names include: sp., spp. (see above), sp. nov., sp. aff., aff., cf., hybrid(s)
+opnom_regexp = r'(^| )([Ss]pecies|[Ss]pp?\.? ?[Aa]ff\.?|[Ss]pp?\.? ?[Nn]ov[a.]?|[Ss]pec\.? ?[Nn]ov[a.]?|[Ss]pecies [Nn]ov[a.]|[Aa]ff\.?|[Cc]f\.?)(?:$| )'
 for x in range(len(col_names)):
     check_open = return_matches(arr = taxa[col_names[x]], regexp = opnom_regexp)
     if len(check_open) > 0:
