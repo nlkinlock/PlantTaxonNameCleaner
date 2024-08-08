@@ -833,10 +833,10 @@ if len(check_hsp) > 0:
     hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = r'^ *[x\u00D7] *$|\b[Hh]ybrids?\b')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # check for cultivars not assigned to species
-check_csp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *cv\.? *$')
+check_csp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *cv\.? *$|^ *cultivars? *$')
 if len(check_csp) > 0:
     print("\t", len(check_csp), "taxa are cultivars not defined to species level\t...removing\n\t\t", ', '.join(set(check_csp)))
-    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *cv\.? *$')
+    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *cv\.? *$|^ *cultivars? *$')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # taxa names involving open nomenclature not acceptable (cannot identify unique species)
 # open names include: sp., spp. (see above), sp. nov., sp. aff., aff., cf., hybrid(s)
