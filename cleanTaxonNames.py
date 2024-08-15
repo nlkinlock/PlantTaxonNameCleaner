@@ -598,7 +598,8 @@ escape_chars = {u'\u000A': u'',
                 u'\u0090': u'',
                 u'\u2028': u'',
                 u'\u2029': u'',
-                u'\u003F': u''}
+                u'\u003F': u'',
+                u'\uFEFF': u''}
 #
 # load main data file
 taxa = pd.read_csv(full_filename, delimiter = ',', encoding = 'utf-8', keep_default_na = False)
