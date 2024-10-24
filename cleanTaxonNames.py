@@ -258,7 +258,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
         this_taxon.append('sp.')
     else:
         check_ident_sp = bool(re.search(r"^spp?.?$", this_taxon[1]))
-        check_ident_cv = bool(re.search(r"^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+", this_taxon[1]))
+        check_ident_cv = bool(re.search(r"^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+", this_taxon[1]))
     if (check_ident_sp | check_ident_cv):
         if check_ident_sp:
             if verbose:
@@ -345,7 +345,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     elif (len(cvgp_idx_init) > 1):
         print(this_taxon_init)
         raise ValueError("multiple cultivar groups detected")
-    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\.?$|^cv\.gp\.?$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+$", mode = 'index')
+    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\.?$|^cv\.gp\.?$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+$", mode = 'index')
     # account for dutch author 't Hart
     cv_idx_init = [x for x in cv_idx_init if this_taxon[x] != "'t"]
     if (len(cv_idx_init) > 0):
@@ -357,7 +357,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
             cv_idx = [i for i, x in enumerate(this_taxon) if i >= cv_idx_init[0]]
         else:
             # if authorities included, only split cv if 'Cultivar Name' method is used
-            cv_idx_init2 = return_matches(arr = this_taxon, regexp = "^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]+$|^[A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]+[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$", mode = 'index')
+            cv_idx_init2 = return_matches(arr = this_taxon, regexp = "^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u2032\u2033\u275C\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u2032\u2033\u275C\u00B4]+$|^[A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201B\u2019\u2018\u275C\u00B4]+[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$", mode = 'index')
             if (len(cv_idx_init2) > 0):
                 cv_idx = [i for i, x in enumerate(this_taxon) if i >= min(cv_idx_init2) and i <= max(cv_idx_init2)]
         this_cv = [e for i, e in enumerate(this_taxon) if i in cv_idx]
@@ -501,6 +501,8 @@ special_chars = {"\u0132": "IJ",
                 "\u201D": '"',
                 "\u2019": "'",
                 "\u2018": "'",
+                "\u2032": "'",
+                "\u2033": '"',
                 "\u0022": '"',
                 "\u275D": '"',
                 "\u275E": '"',
