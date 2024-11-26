@@ -100,9 +100,9 @@ def replace_author(arr, dic, alphbtz = False, allow_inits = False):
         this_key_init = re.sub(r'\ ', r' ?', s_dic_keys[y])
         this_key_init = re.sub(r'\.', r'\.?', this_key_init)
         if allow_inits:
-            this_key = "".join(['( |^|\(|\.)', this_key_init, '( |$|\)|,)'])
+            this_key = "".join(['( |^|\\(|\\.)', this_key_init, '( |$|\\)|,)'])
         else:
-            this_key = "".join(['( |^|\()', this_key_init, '( |$|\)|,)'])
+            this_key = "".join(['( |^|\\()', this_key_init, '( |$|\\)|,)'])
         this_val = "".join(['\\1', s_dic_vals[y], '\\2'])
         idx = [i for i, v in enumerate(arr) if bool(re.search(this_key, v))]
         if (len(idx) > 0):
@@ -143,8 +143,8 @@ def replace_dict_substr(arr, dic):
     return arr
 # return equal-length array with only grep matches extracted
 def separate_infra(arr, keep_final = True):
-    regexp = '(?:^| )(var\.|subvar\.|convar\.|subsp\.|f\.|subf\.)'
-    re_sub = '.*(^| )(var\.|subvar\.|convar\.|subsp\.|f\.|subf\.) ?'
+    regexp = '(?:^| )(var\\.|subvar\\.|convar\\.|subsp\\.|f\\.|subf\\.)'
+    re_sub = '.*(^| )(var\\.|subvar\\.|convar\\.|subsp\\.|f\\.|subf\\.) ?'
     if type(arr) == pd.core.series.Series:
         arr = arr.to_numpy()    
     rank = []
@@ -224,7 +224,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     # if there is a space separating the hybrid indicator, remove from list and add to genus
     gen_hyb_test1 = bool(re.search('^[xX\u00D7+]$', this_taxon[0]))
     gen_hyb_test2 = bool(re.search('^[\u00D7+]', this_taxon[0]))
-    gen_hyb_test3 = bool(re.search('\+', this_taxon[0]))
+    gen_hyb_test3 = bool(re.search('\\+', this_taxon[0]))
     gen_hyb_test = gen_hyb_test1 | gen_hyb_test2
     if gen_hyb_test1:
         if verbose:
@@ -243,7 +243,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
         raise ValueError("genus not identified")
     # test whether taxon is a nothospecies
     # first determine whether infraspecific name or cultivar exists to set search range
-    infrank_cv_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\.?$|^(notho)?ssp\.?$|^(notho)?(con|sub)?var\.?$|^(notho)?(con|sub)?v\.?$|^(notho)?(sub)?f\.?$|^(notho)?(sub)?f[ao]?\.?$|^(notho)?(sub)?forma\.?$|^(notho)?(sub)?fma\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4\'"]|^cv\.?$', mode = 'index')
+    infrank_cv_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\\.?$|^(notho)?ssp\\.?$|^(notho)?(con|sub)?var\\.?$|^(notho)?(con|sub)?v\\.?$|^(notho)?(sub)?f\\.?$|^(notho)?(sub)?f[ao]?\\.?$|^(notho)?(sub)?forma\\.?$|^(notho)?(sub)?fma\\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4\'"]|^cv\\.?$', mode = 'index')
     if len(infrank_cv_idx) > 0:
         taxon_range = this_taxon[1:infrank_cv_idx[0]]
     else:
@@ -345,7 +345,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     elif (len(cvgp_idx_init) > 1):
         print(this_taxon_init)
         raise ValueError("multiple cultivar groups detected")
-    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\.?$|^cv\.gp\.?$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+$", mode = 'index')
+    cv_idx_init = return_matches(arr = this_taxon, regexp = "^cv\\.?$|^cv\\.gp\\.?$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]{2,}[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"]$|^[\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4'\"][A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.'\u201A\u201B\u201E\u201C\u201F\u201D\u2019\u2018\u2032\u2033\u0022\u275D\u275E\u2E42\u301D\u301E\u301F\uFF02\u275B\u275C\u275F\u00B4]+$", mode = 'index')
     # account for dutch author 't Hart
     cv_idx_init = [x for x in cv_idx_init if this_taxon[x] != "'t"]
     if (len(cv_idx_init) > 0):
@@ -377,7 +377,7 @@ def split_taxon(this_taxon_init, authority = auth_split_bool, verbose = False):
     #
     # check for case where identified rank is at the end of the name
     # could be unnamed variant or, for example, authority names like L. f.
-    infra_rank_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\.?$|^(notho)?ssp\.?$|^(notho)?(con|sub)?var\.?$|^(notho)?(con|sub)?v\.?$|^(notho)?(sub)?f\.?$|^(notho)?(sub)?f[ao]?\.?$|^(notho)?(sub)?forma\.?$|^(notho)?(sub)?fma\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$', mode = 'index')
+    infra_rank_idx = return_matches(arr = this_taxon, regexp = '^(notho)?subsp\\.?$|^(notho)?ssp\\.?$|^(notho)?(con|sub)?var\\.?$|^(notho)?(con|sub)?v\\.?$|^(notho)?(sub)?f\\.?$|^(notho)?(sub)?f[ao]?\\.?$|^(notho)?(sub)?forma\\.?$|^(notho)?(sub)?fma\\.?$|^[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]$', mode = 'index')
     infra_rank_idx = [x for x in infra_rank_idx if x != len(this_taxon) - 1]
     # special case where f. as in filius is followed by infraspecific rank
     # note: uppercase added recently to allow capitalized infraspecific names
@@ -686,7 +686,7 @@ else:
         print("\ninfraspecific ranks/names are present in specific epithet column\t...moving to own column (", len(check_infra), " matches)\n\t\t", ', '.join(infra_samp), sep = '')
         infra_idx = return_matches(arr = taxa['SpecificEpithet'], mode = 'index', regexp = infra_regexp)
         # edit initial epithet to break into three parts
-        infedit_regexp = '(.*) (var\.?|v\.|subvar\.?|subv\.?|convar\.?|conv\.?|subsp\.?|ssp\.?|f[ao]?\.|fma\.?|forma |subf[oa]?\.?|subfma\.?) ?(.*)'
+        infedit_regexp = '(.*) (var\\.?|v\\.|subvar\\.?|subv\\.?|convar\\.?|conv\\.?|subsp\\.?|ssp\\.?|f[ao]?\\.|fma\\.?|forma |subf[oa]?\\.?|subfma\\.?) ?(.*)'
         infra_init = check_infra
         infra_name = [re.sub(infedit_regexp, '\\3', v) for v in infra_init]
         infra_rank = [re.sub(infedit_regexp, '\\2', v) for v in infra_init]
@@ -709,10 +709,10 @@ else:
     for col in cols:
         print("\tchecking column:", col)
         # check whether specific epithet includes cultivar
-        cv_regexp = "(?:^| )(?:cvs?\. ?['\"]?|cvs?\.? ['\"]?|cvgr\.? ?['\"]?|['\"])([,\w .0-9-]*)(?:['\"]| |$)"
+        cv_regexp = "(?:^| )(?:cvs?\\. ?['\"]?|cvs?\\.? ['\"]?|cvgr\\.? ?['\"]?|['\"])([,\\w .0-9-]*)(?:['\"]| |$)"
         cv_init = taxa[col]
         # remove apostrophes before checking
-        cv_init = [re.sub("(\w)'(\w)", r'\1\2', v) for v in cv_init]
+        cv_init = [re.sub("(\\w)'(\\w)", r'\1\2', v) for v in cv_init]
         check_cv = return_matches(arr = cv_init, regexp = cv_regexp)   
         if (len(check_cv) > 0):
             cv_samp = list(set(check_cv))
@@ -721,11 +721,11 @@ else:
             print("\tcultivars identified, moving to cultivar column (", len(cv_samp), " matches)\n\t\t", ', '.join(cv_samp), sep = '')
             cv_idx = return_matches(arr = cv_init, regexp = cv_regexp, mode = 'index')
             # edit initial epithet to break into two parts
-            cvedit_regexp = "(.*)(?:^| )((?:cvs?\. ?['\"]?|cvs?\.? ['\"]?|cvg[rp]\.? ?['\"]?|['\"])(?:[,\w .0-9-]*)(?:['\"]| |$))"
+            cvedit_regexp = "(.*)(?:^| )((?:cvs?\\. ?['\"]?|cvs?\\.? ['\"]?|cvg[rp]\\.? ?['\"]?|['\"])(?:[,\\w .0-9-]*)(?:['\"]| |$))"
             cvedit_init = check_cv
             cv_edit = [re.sub(cvedit_regexp, '\\2', v) for v in cvedit_init]
             name_edit_init = [re.sub(cvedit_regexp, '\\1', v) for v in cvedit_init]
-            cleancv_regexp = " ?cvs?\.?( |$)|cvg[rp]\.?( |$)"
+            cleancv_regexp = " ?cvs?\\.?( |$)|cvg[rp]\\.?( |$)"
             name_edit = [re.sub(cleancv_regexp, '', v) for v in name_edit_init]
             # add cultivar column if missing
             if 'Cultivar' not in col_names:
@@ -823,7 +823,7 @@ if len(check_asl) > 0:
     asl_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = asl_regexp)
     taxa = taxa[~np.array(asl_bool)]
 # check for undefined specific epithets, spp, sp, etc.
-spp_regexp = '^ *[Ss]pecies *$|^ *[Ss]pp?\.? *$|^ *[Ss]pec\.? *$|^ *\?* *$'
+spp_regexp = '^ *[Ss]pecies *$|^ *[Ss]pp?\\.? *$|^ *[Ss]pec\\.? *$|^ *\\?* *$'
 check_spp = return_matches(arr = taxa['SpecificEpithet'], regexp = spp_regexp)
 if len(check_spp) > 0:
     print("\t", len(check_spp), "taxa with undefined specific epithets\t...removing\n\t\t", ', '.join(set(check_spp)))
@@ -836,10 +836,10 @@ if len(check_hsp) > 0:
     hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = r'^ *[x\u00D7] *$|\b[Hh]ybrids?\b')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # check for cultivars not assigned to species
-check_csp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *cv\.? *$|^ *cultivars? *$')
+check_csp = return_matches(arr = taxa['SpecificEpithet'], regexp = '^ *cv\\.? *$|^ *cultivars? *$')
 if len(check_csp) > 0:
     print("\t", len(check_csp), "taxa are cultivars not defined to species level\t...removing\n\t\t", ', '.join(set(check_csp)))
-    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *cv\.? *$|^ *cultivars? *$')
+    hyb_nospp_bool = return_matches(arr = taxa['SpecificEpithet'], mode = 'bool', regexp = '^ *cv\\.? *$|^ *cultivars? *$')
     taxa = taxa[~np.array(hyb_nospp_bool)]
 # taxa names involving open nomenclature not acceptable (cannot identify unique species)
 # open names include: sp., spp. (see above), sp. nov., sp. aff., aff., cf., hybrid(s)
@@ -915,7 +915,7 @@ cols = [x for x in col_temp if x in col_names]
 for col in cols:
     print("\tchecking column:", col)
     test = ', '.join(taxa[col])
-    spec_chars = re.findall("[^A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.,' \n\(\)&]", test)
+    spec_chars = re.findall("[^A-Za-z-0-9À-ÿĀ-ſƀ-ȳ.,' \n\\(\\)&]", test)
     if len(spec_chars) > 0:
         print("\tNOTE: unusual special characters identified, check manually!\n\t\t", ', '.join(set(spec_chars)))
     else:
@@ -957,34 +957,34 @@ for col in cols:
 # remove synonyms in name
 print("\nchecking for parentheses spacing errors and synonyms in name")
 for x in range(len(col_names)):
-    check_parens1 = return_matches(arr = taxa[col_names[x]], regexp = '([a-zA-Z.]+)\(')
+    check_parens1 = return_matches(arr = taxa[col_names[x]], regexp = '([a-zA-Z.]+)\\(')
     if len(check_parens1) > 0:
         parens1_samp = list(set(check_parens1))
         if len(parens1_samp) > subset_len:
             parens1_samp = random.sample(parens1_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens1), " matches)\n\t\t", ', '.join(parens1_samp), sep = '')
-        taxa[col_names[x]] = [re.sub('([a-zA-Z.]+)\(', r'\1 (', v) for v in taxa[col_names[x]]]
-    check_parens2 = return_matches(arr = taxa[col_names[x]], regexp = '\)([a-zA-Z.]+)')
+        taxa[col_names[x]] = [re.sub('([a-zA-Z.]+)\\(', r'\1 (', v) for v in taxa[col_names[x]]]
+    check_parens2 = return_matches(arr = taxa[col_names[x]], regexp = '\\)([a-zA-Z.]+)')
     if len(check_parens2) > 0:
         parens2_samp = list(set(check_parens2))
         if len(parens2_samp) > subset_len:
             parens2_samp = random.sample(parens2_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens2), " matches)\n\t\t", ', '.join(parens2_samp), sep = '')
-        taxa[col_names[x]] = [re.sub('\)([a-zA-Z.]+)', r') \1', v) for v in taxa[col_names[x]]]
-    check_parens3 = return_matches(arr = taxa[col_names[x]], regexp = ' \)')
+        taxa[col_names[x]] = [re.sub('\\)([a-zA-Z.]+)', r') \1', v) for v in taxa[col_names[x]]]
+    check_parens3 = return_matches(arr = taxa[col_names[x]], regexp = ' \\)')
     if len(check_parens3) > 0:
         parens3_samp = list(set(check_parens3))
         if len(parens3_samp) > subset_len:
             parens3_samp = random.sample(parens3_samp, subset_len)
         print(col_names[x], "\tparentheses spacing error identified\t...standardizing (", len(check_parens3), " matches)\n\t\t", ', '.join(parens3_samp), sep = '')
-        taxa[col_names[x]] = [re.sub(' \)', r')', v) for v in taxa[col_names[x]]]
-    check_syn = return_matches(arr = taxa[col_names[x]], regexp = '([A-Z][^A-Z\(]+)(.*) \(=.*\)')
+        taxa[col_names[x]] = [re.sub(' \\)', r')', v) for v in taxa[col_names[x]]]
+    check_syn = return_matches(arr = taxa[col_names[x]], regexp = '([A-Z][^A-Z\\(]+)(.*) \\(=.*\\)')
     if len(check_syn) > 0:
         syn_samp = list(set(check_syn))
         if len(syn_samp) > subset_len:
             syn_samp = random.sample(syn_samp, subset_len)
         print(col_names[x], "\tsynonym in name identified, i.e., (= )\t...removing all content in parens (",len(check_syn), " matches)\n\t\t", ', '.join(syn_samp), sep = '')
-        taxa[col_names[x]] = [re.sub('([A-Z][^A-Z\(]+)(.*) \(=.*\)', r'\1\2', v) for v in taxa[col_names[x]]]
+        taxa[col_names[x]] = [re.sub('([A-Z][^A-Z\\(]+)(.*) \\(=.*\\)', r'\1\2', v) for v in taxa[col_names[x]]]
     if cv_bool | (col_names[x] != "Cultivar"):   
         check_eq = return_matches(arr = taxa[col_names[x]], regexp = ' ?= ?')
         if len(check_eq) > 0:
@@ -1185,7 +1185,7 @@ if ('Authority' in col_names):
             print("\t'non' included in infraspecific author citation\t...removing this and following content (", len(check_non), " matches)\n\t\t", ', '.join(non_samp), sep = '')
             taxa['InfraspecificAuthority'] = [re.sub(r'(^| |\()non .*$', '', v) for v in taxa['InfraspecificAuthority']]
         # 47&47A An alteration of the diagnostic characters or of the circumscription of a taxon without the exclusion of the type does not warrant a change of the author citation of the name of the taxon.  When an alteration as mentioned in Art. 47 has been considerable, the nature of the change may be indicated by adding such words, abbreviated where suitable.
-    alt_regexp = '(^| | ?\()(p[\. ]{1,2}p\.?|pro hybr\.?|pro sp\.?|pro syn\.?|pro syn\.?|pro nm\.?|nome?n?[\. ]{1,2}inval\.?|nome?n?[\. ]{1,2}ambig\.?|nome?n?[\. ]{1,2}illeg\.?|nome?n?[\. ]{1,2}rej\.?|nome?n?[\. ]{1,2}inq\.?|nome?n?[\. ]{1,2}prov\.?|nome?n?[\. ]{1,2}obsc\.?|nome?n?[\. ]{1,2}nud\.?|nome?n?[\. ]{1,2}dub\.?|nome?n?[\. ]{1,2}cons?[\. ]{1,2}prop\.?|nom[\. ]{1,2}conserv\.?|nome?n?[\. ]{1,2}cons?\.?|s[\. ]{1,2}ampl\.?|s[\. ]{1,2}l\.?|s[\. ]{1,2}s\.|s[\. ]{1,2}lat\.?|sens[\.u] ?lat[\.o]|sens[\.u] ?ampl[\.o]|s[\. ]{1,2}str\.?|sens[\.u] ?str\.?|sens[\.u] ?strict[\.o]|emend\.?|emendavit|mut[\. ]{1,2}char\.?|ined\.?|mutatis characteribus|excl[\. ]{1,2}gen\.?|excl[\. ]{1,2}sp\.?|excl[\. ]{1,2}var\.?).*'
+    alt_regexp = '(^| | ?\\()(p[\\. ]{1,2}p\\.?|pro hybr\\.?|pro sp\\.?|pro syn\\.?|pro syn\\.?|pro nm\\.?|nome?n?[\\. ]{1,2}inval\\.?|nome?n?[\\. ]{1,2}ambig\\.?|nome?n?[\\. ]{1,2}illeg\\.?|nome?n?[\\. ]{1,2}rej\\.?|nome?n?[\\. ]{1,2}inq\\.?|nome?n?[\\. ]{1,2}prov\\.?|nome?n?[\\. ]{1,2}obsc\\.?|nome?n?[\\. ]{1,2}nud\\.?|nome?n?[\\. ]{1,2}dub\\.?|nome?n?[\\. ]{1,2}cons?[\\. ]{1,2}prop\\.?|nom[\\. ]{1,2}conserv\\.?|nome?n?[\\. ]{1,2}cons?\\.?|s[\\. ]{1,2}ampl\\.?|s[\\. ]{1,2}l\\.?|s[\\. ]{1,2}s\\.|s[\\. ]{1,2}lat\\.?|sens[\\.u] ?lat[\\.o]|sens[\\.u] ?ampl[\\.o]|s[\\. ]{1,2}str\\.?|sens[\\.u] ?str\\.?|sens[\\.u] ?strict[\\.o]|emend\\.?|emendavit|mut[\\. ]{1,2}char\\.?|ined\\.?|mutatis characteribus|excl[\\. ]{1,2}gen\\.?|excl[\\. ]{1,2}sp\\.?|excl[\\. ]{1,2}var\\.?).*'
     check_alt = return_matches(arr = taxa['Authority'], regexp = alt_regexp)
     if len(check_alt) > 0:
         alt_samp = list(set(check_alt))
@@ -1345,42 +1345,42 @@ if 'InfraspecificName' in col_names:
     if len(check_subsp) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_subsp), " matches)\n\t\t", ', '.join(set(check_subsp)), sep = '')
         taxa[rank_col] = [re.sub('( |^)(subsp|ssp.?)( |$)', '\\1subsp.\\3', v) for v in taxa[rank_col]]
-    check_convar = return_matches(arr = taxa[rank_col], regexp = '( |^)(convar|conv\.?)( |$)')
+    check_convar = return_matches(arr = taxa[rank_col], regexp = '( |^)(convar|conv\\.?)( |$)')
     if len(check_convar) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_convar), " matches)\n\t\t", ', '.join(set(check_convar)), sep = '')
-        taxa[rank_col] = [re.sub('( |^)(convar|conv\.?)( |$)', '\\1convar.\\3', v) for v in taxa[rank_col]]
-    check_var = return_matches(arr = taxa[rank_col], regexp = '( |^)(var|v\.?)( |$)')
+        taxa[rank_col] = [re.sub('( |^)(convar|conv\\.?)( |$)', '\\1convar.\\3', v) for v in taxa[rank_col]]
+    check_var = return_matches(arr = taxa[rank_col], regexp = '( |^)(var|v\\.?)( |$)')
     if len(check_var) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_var), " matches)\n\t\t", ', '.join(set(check_var)), sep = '')
-        taxa[rank_col] = [re.sub('( |^)(var|v\.?)( |$)', '\\1var.\\3', v) for v in taxa[rank_col]]
-    check_subvar = return_matches(arr = taxa[rank_col], regexp = '( |^)(subvar|subv\.?)( |$)')
+        taxa[rank_col] = [re.sub('( |^)(var|v\\.?)( |$)', '\\1var.\\3', v) for v in taxa[rank_col]]
+    check_subvar = return_matches(arr = taxa[rank_col], regexp = '( |^)(subvar|subv\\.?)( |$)')
     if len(check_subvar) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_subvar), " matches)\n\t\t", ', '.join(set(check_subvar)), sep = '')
-        taxa[rank_col] = [re.sub('( |^)(subvar|subv\.?)( |$)', '\\1subvar.\\3', v) for v in taxa[rank_col]]
-    check_f = return_matches(arr = taxa[rank_col], regexp = '( |^)(f[ao]?\.?|forma\.?|fma\.?)( |$)')
+        taxa[rank_col] = [re.sub('( |^)(subvar|subv\\.?)( |$)', '\\1subvar.\\3', v) for v in taxa[rank_col]]
+    check_f = return_matches(arr = taxa[rank_col], regexp = '( |^)(f[ao]?\\.?|forma\\.?|fma\\.?)( |$)')
     if len(check_f) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_f), " matches)\n\t\t", ', '.join(set(check_f)), sep = '')
-        taxa[rank_col] = [re.sub('( |^)(f[ao]?\.?|forma\.?|fma\.?)( |$)', '\\1f.\\3', v) for v in taxa[rank_col]]
-    check_subf = return_matches(arr = taxa[rank_col], regexp = '( |^)(subf[ao]?\.?|subforma\.?|subfma\.?)( |$)')
+        taxa[rank_col] = [re.sub('( |^)(f[ao]?\\.?|forma\\.?|fma\\.?)( |$)', '\\1f.\\3', v) for v in taxa[rank_col]]
+    check_subf = return_matches(arr = taxa[rank_col], regexp = '( |^)(subf[ao]?\\.?|subforma\\.?|subfma\\.?)( |$)')
     if len(check_subf) > 0:
         print("\talternative infraspecific rank spelling identified\t...standardizing (", len(check_subf), " matches)\n\t\t", ', '.join(set(check_subf)), sep = '')
-        taxa[rank_col] = [re.sub('( |^)(subf[ao]?\.?|subforma\.?|subfma\.?)( |$)', '\\1subf.\\3', v) for v in taxa[rank_col]]
+        taxa[rank_col] = [re.sub('( |^)(subf[ao]?\\.?|subforma\\.?|subfma\\.?)( |$)', '\\1subf.\\3', v) for v in taxa[rank_col]]
     # replace greek letters in infraspecific names (former way to indicate var.)
     check_greek = return_matches(arr = taxa[rank_col], regexp = '[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]')
     if len(check_greek) > 0:
         print("\talternative intraspecific rank spelling identified\t...standardizing (", len(check_greek), " matches)\n\t\t", ', '.join(set(check_greek)), sep = '')
-        taxa[rank_col] = [re.sub('[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]\.?', 'var.', v) for v in taxa[rank_col]]
+        taxa[rank_col] = [re.sub('[\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03BB\u03C1]\\.?', 'var.', v) for v in taxa[rank_col]]
     print("\nchecking infraspecific names")
     # remove square brackets
-    check_square = return_matches(arr = taxa['InfraspecificName'], regexp = ' ?\[.*?\]')
+    check_square = return_matches(arr = taxa['InfraspecificName'], regexp = ' ?\\[.*?\\]')
     if len(check_square) > 0:
         print("\tsquare brackets identified\t...removing brackets and contents (", len(check_square), " matches)\n\t\t", ', '.join(set(check_square)), sep = '')
-        taxa['InfraspecificName'] = [re.sub(' ?\[.*?\]', '', v) for v in taxa['InfraspecificName']] 
+        taxa['InfraspecificName'] = [re.sub(' ?\\[.*?\\]', '', v) for v in taxa['InfraspecificName']] 
     # remove parentheses
-    check_parens = return_matches(arr = taxa['InfraspecificName'], regexp = ' ?\(.*?\)')
+    check_parens = return_matches(arr = taxa['InfraspecificName'], regexp = ' ?\\(.*?\\)')
     if len(check_parens) > 0:
         print("\tparentheses identified\t...removing parens and contents (", len(check_parens), " matches)\n\t\t", ', '.join(set(check_parens)), sep = '')
-        taxa['InfraspecificName'] = [re.sub(' ?\(.*?\)', '', v) for v in taxa['InfraspecificName']]
+        taxa['InfraspecificName'] = [re.sub(' ?\\(.*?\\)', '', v) for v in taxa['InfraspecificName']]
     # remove certain elements of names
     # taxonomic circumscription: p.p. (max/min, taxon includes more than one currently recognized entity), sens. lat., sens. strict., nom. cons. (conserved name)
     circ_regexp = r'(^| )(spp[\. ]{1,2}aggr?\.?|aggr?\.?|nom[\. ]{1,2}inval\.?|nom[\. ]{1,2}illeg\.?|nom[\. ]{1,2}rej\.?|nom[\. ]{1,2}inq\.?|nom[\. ]{1,2}obsc\.?|nom[\. ]{1,2}nud\.?|nom[\. ]{1,2}dub\.?|nom[\. ]{1,2}cons?[\. ]{1,2}prop\.?|nom[\. ]{1,2}conserv\.?|nom[\. ]{1,2}cons?\.?|p[\. ]{1,2}p\.?|s[\. ]{1,2}ampl\.?|s[\. ]{1,2}l\.?|s[\. ]{1,2}s\.?|s[\. ]{1,2}lat\.?|sens[\.u] ?lat[\.o]|sens[\.u] ?ampl[\.o]|s[\. ]{1,2}str\.?|sens[\.u] ?str\.?|sens[\.u] ?strict[\.o]|mut[\. ]{1,2}char\.?|excl[\. ]{1,2}gen\.?|excl[\. ]{1,2}sp\.?|excl[\. ]{1,2}var\.?)(?:$| )'
@@ -1392,7 +1392,7 @@ if 'InfraspecificName' in col_names:
         # old texts often list varieties like they are valid species names, e.g. flore-pleno
         # check for these and move to cultivar column if detected
         print("\nchecking for cultivars in infraspecific names")
-        cult_regexp = '(?=(?<!subsp)\.)(?=(?<!^convar)\.)(?=(?<!^var)\.)(?=(?<!subvar)\.)(?=(?<!f)\.)(?=(?<!subf)\.)\..|(?<!subsp\. )(?<!convar\. )(?<!^var\. )(?<!subvar\. )(?<!f\. )(?<!subf\. )flore[ -]|(?<!subsp\. )(?<!^convar\. )(?<!^var\. )(?<!subvar\. )(?<!f\. )(?<!subf\. )foliis[ -]|(?<!subsp\. )(?<!^convar\. )(?<!^var\. )(?<!subvar\. )(?<!f\. )(?<!subf\. )fol\.?[ -]|(?<!subsp\. )(?<!^convar\. )(?<!^var\. )(?<!subvar\. )(?<!f\. )(?<!subf\. )fl\.?[ -]|(?<!subsp\. )(?<!^convar\. )(?<!^var\. )(?<!subvar\. )(?<!f\. )(?<!subf\. )fruct[uo][ -]|^cvs?\.? ?[\'"]?|^cvgr\.? ?[\'"]?|^[\'"]'
+        cult_regexp = '(?=(?<!subsp)\\.)(?=(?<!^convar)\\.)(?=(?<!^var)\\.)(?=(?<!subvar)\\.)(?=(?<!f)\\.)(?=(?<!subf)\\.)\\..|(?<!subsp\\. )(?<!convar\\. )(?<!^var\\. )(?<!subvar\\. )(?<!f\\. )(?<!subf\\. )flore[ -]|(?<!subsp\\. )(?<!^convar\\. )(?<!^var\\. )(?<!subvar\\. )(?<!f\\. )(?<!subf\\. )foliis[ -]|(?<!subsp\\. )(?<!^convar\\. )(?<!^var\\. )(?<!subvar\\. )(?<!f\\. )(?<!subf\\. )fol\\.?[ -]|(?<!subsp\\. )(?<!^convar\\. )(?<!^var\\. )(?<!subvar\\. )(?<!f\\. )(?<!subf\\. )fl\\.?[ -]|(?<!subsp\\. )(?<!^convar\\. )(?<!^var\\. )(?<!subvar\\. )(?<!f\\. )(?<!subf\\. )fruct[uo][ -]|^cvs?\\.? ?[\'"]?|^cvgr\\.? ?[\'"]?|^[\'"]'
         check_cult = return_matches(arr = taxa['InfraspecificName'], regexp = cult_regexp)
         cult_idx = return_matches(arr = taxa['InfraspecificName'], mode = 'index', regexp = cult_regexp)
         if 'InfraspecificRank' in col_names:
@@ -1412,7 +1412,7 @@ if 'InfraspecificName' in col_names:
             if 'InfraspecificRank' in col_names:
                 taxa.loc[cult_idx, 'InfraspecificRank'] = ''
     print("\nchecking for infraspecific ranks in infraspecific names")
-    infrank_regexp = '(?:^| )(var\.|subvar\.|convar\.|subsp\.|f\.|subf\.)(?:$| |[a-z])'
+    infrank_regexp = '(?:^| )(var\\.|subvar\\.|convar\\.|subsp\\.|f\\.|subf\\.)(?:$| |[a-z])'
     check_infrank = return_matches(arr = taxa['InfraspecificName'], regexp = infrank_regexp)
     if len(check_infrank) > 0:
         rank_infsamp = list(set(check_infrank))
@@ -1457,7 +1457,7 @@ if cv_bool:
         this_cv = taxa.loc[x, 'Cultivar']
         if this_cv != '':
             # remove cv. (not standardized)
-            this_cv = re.sub("\"|cvs?\.? |cvs?\. ?", "", this_cv)
+            this_cv = re.sub("\"|cvs?\\.? |cvs?\\. ?", "", this_cv)
             # remove apostrophes (except when they represent possession, articles, etc.)
             this_cv = re.sub("(?<![dlomDLOM])(?<!'n)(?<!s )(?<!'[DLOM])'(?!s )(?!n')|^['\"]|['\"]$", "", this_cv)
             # if cultivar name includes initials, do not change to title case
@@ -1532,15 +1532,15 @@ if len(check_infepi) > 0:
 #
 # removing periods in epithets
 print("\nchecking for periods in species epithets")
-check_per = return_matches(arr = taxa['SpecificEpithet'], regexp = '\.')
+check_per = return_matches(arr = taxa['SpecificEpithet'], regexp = '\\.')
 if len(check_per) > 0:
     print("\tperiods in specific epithets\t...removing (", len(check_per), " matches)\n\t\t", ', '.join(set(check_per)), sep = '')
-    taxa['SpecificEpithet'] = [re.sub('\.', r'', v) for v in taxa['SpecificEpithet']]
+    taxa['SpecificEpithet'] = [re.sub('\\.', r'', v) for v in taxa['SpecificEpithet']]
 print("\nchecking for periods in infraspecific epithets")
-check_infper = return_matches(arr = taxa['InfraspecificName'], regexp = '\.')
+check_infper = return_matches(arr = taxa['InfraspecificName'], regexp = '\\.')
 if len(check_infper) > 0:
     print("\tperiods in infraspecific epithets\t...removing (", len(check_infper), " matches)\n\t\t", ', '.join(set(check_infper)), sep = '')
-    taxa['InfraspecificName'] = [re.sub('\.', r'', v) for v in taxa['InfraspecificName']]
+    taxa['InfraspecificName'] = [re.sub('\\.', r'', v) for v in taxa['InfraspecificName']]
 #
 # check for cases where infraspecific rank is present with no name
 check_rank = taxa['InfraspecificRank'].str.strip().astype(bool)
