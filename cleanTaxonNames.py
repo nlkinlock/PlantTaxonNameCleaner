@@ -11,11 +11,11 @@ import csv
 print("cleanTaxonNames.py: began at", datetime.now().strftime("%H:%M:%S"))
 #
 # !!! uncomment and use only if debugging !!!
-# path = "/media/nlkhd/Nicole/Postdoc/PlantTaxonNameCleaner/"
-# full_filename = "/media/nlkhd/Nicole/Postdoc/WorldCuP/Sources/Sweden/Sweden_SKUD_2021.csv"
-# old_text_bool = False
-# auth_split_bool = True
-# cv_bool = True
+path = "/home/nlkinlock/Postdoc/PlantTaxonNameCleaner/"
+full_filename = "/home/nlkinlock/Postdoc/WorldCuP/Sources/Brazil/Brazil_Faria_2026.csv"
+old_text_bool = False
+auth_split_bool = True
+cv_bool = True
 #
 full_filename = sys.argv[1]
 filename = full_filename[:-4]
@@ -577,6 +577,7 @@ accent_chars = {"\u00C0": "A",
                 "\u00FB": "u",
                 "\u00FC": "ue"}
 spacing_chars = {"\u00A0": "\u0020",
+                "\u0009": "\u0020",
                 "\u1680": "\u0020",
                 "\u2000": "\u0020",
                 "\u2001": "\u0020",
@@ -589,8 +590,12 @@ spacing_chars = {"\u00A0": "\u0020",
                 "\u2008": "\u0020",
                 "\u2009": "\u0020",
                 "\u200A": "\u0020",
+                "\u200B": "\u0020",
+                "\u200C": "\u0020",
+                "\u200D": "\u0020",
                 "\u202F": "\u0020",
                 "\u205F": "\u0020",
+                "\u2060": "\u0020",
                 "\u3000": "\u0020"}
 escape_chars = {u'\u000A': u'',
                 u'\u000B': u'',
